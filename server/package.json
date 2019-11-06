@@ -1,0 +1,28 @@
+{
+  "scripts": {
+    "start": "babel-node ./server.js",
+    "lint": "eslint ./"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3",
+    "assert": "^2.0.0",
+    "axios": "^0.19.0",
+    "eslint": "^6.6.0",
+    "mongodb": "^3.3.3",
+    "mongoose": "^5.7.7",
+    "notp": "^2.0.3",
+    "passport": "^0.4.0",
+    "passport-steam": "^1.0.11",
+    "thirty-two": "^1.0.2"
+  },
+  "name": "p2p",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {},
+  "author": "Austin Nguyen",
+  "license": "ISC",
+  "description": ""
+}
