@@ -1,6 +1,6 @@
 import axios from 'axios';
 import bitskinsModule from './bitskinsBaseModule';
-import { updateItem, findItem } from '../database/actions';
+import { updateItem, findItem } from '../database/itemActions';
 
 class bitskinsPricingModule extends bitskinsModule {
     constructor(bitskinsApiKey, bitskinsTwoFactor) {
@@ -13,6 +13,7 @@ class bitskinsPricingModule extends bitskinsModule {
         Object.values(response.data.prices).forEach(item => {
             updateItem(item);
         });
+        console.log('Finished Pricing');
     }
     async getPrice(itemMarketName) {
         const itemDetails = await findItem({name: itemMarketName});

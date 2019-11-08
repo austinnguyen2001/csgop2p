@@ -2,16 +2,13 @@ import { Schema, model } from 'mongoose';
 import Item from './item.model';
 
 const userSchema = new Schema({
-    steamid: Number,
+    steamid: String,
     balance: {
         type: Number,
         default: 0
     },
     backpack: [Item.schema],
-    lastupdate: {
-        type: Number,
-        default: Date.now
-    }
+    lastupdate: Number
 });
 
 const User = new model("User", userSchema);

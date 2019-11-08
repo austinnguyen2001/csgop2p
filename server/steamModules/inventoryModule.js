@@ -4,7 +4,8 @@ class InventoryModule {
     constructor() {
         this.baseUrl = 'https://steamcommunity.com/inventory';
     }
-    async getInventory(steamId, appId, contextId) {
+    async getInventory(steamId, appId = 730, contextId = 2) {
+        console.log(steamId);
         const response = await this._sendRequest(steamId, appId, contextId);
         const assets = response.data.assets;
         const descriptions = response.data.descriptions;
@@ -20,7 +21,8 @@ class InventoryModule {
                 ) {
                     const item = {
                         assetid: asset.assetid,
-                        name: description.market_name
+                        name: description.market_name,
+                        icon_url: description.icon_url
                     };
                     inventory.push(item);
                 }
@@ -28,7 +30,7 @@ class InventoryModule {
         });
         return inventory;
     }
-    _sendRequest(steamId, appId = 730, contextId = 2) {
+    _sendRequest(steamId, appId, contextId) {
         const url = `${this.baseUrl}/${steamId}/${appId}/${contextId}`;
         return axios.get(url);
     }
