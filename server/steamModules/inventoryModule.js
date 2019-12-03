@@ -5,13 +5,12 @@ class InventoryModule {
         this.baseUrl = 'https://steamcommunity.com/inventory';
     }
     async getInventory(steamId, appId = 730, contextId = 2) {
-        console.log(steamId);
-        const response = await this._sendRequest(steamId, appId, contextId);
+        const response = await this.sendRequest(steamId, appId, contextId);
         const assets = response.data.assets;
         const descriptions = response.data.descriptions;
-        return this._parseResponse(assets, descriptions);
+        return this.parseResponse(assets, descriptions);
     }
-    _parseResponse(assets, descriptions) {
+    parseResponse(assets, descriptions) {
         const inventory = [];
         assets.forEach((asset) => {
             descriptions.forEach((description) => {
@@ -30,7 +29,7 @@ class InventoryModule {
         });
         return inventory;
     }
-    _sendRequest(steamId, appId, contextId) {
+    sendRequest(steamId, appId, contextId) {
         const url = `${this.baseUrl}/${steamId}/${appId}/${contextId}`;
         return axios.get(url);
     }

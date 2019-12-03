@@ -3,41 +3,40 @@ import { resolvers } from './resolvers';
 
 const typeDefs = `
    type Item {
-      name: String!
+      name: String
       assetid: String
-      icon_url: String,
+      icon_url: String
       quality_color: String
       price: Float
    }
 
    type MarketItem {
-      owner: String!
-      assetid: String!
-      item: Item!
+      owner: String
+      assetid: String
+      item: Item
       purchaser: String
       startedPurchase: Int
    }
 
    type User {
-      steamid: String!
+      steamid: String
+      personaname: String
+      avatar: String
+      tradeurl: String
       balance: Float
       backpack: [Item]
       lastupdate: Int
    }
 
    type Query {
-      getUser(steamid: String!): User
+      getUser: User
       allMarketOrders: [MarketItem]
-   }
-
-   input ItemInput {
-      assetid: String!
-      name: String!
    }
    
    type Mutation {
-      addMarketOrderItem(steamid: String!, item: ItemInput!) : String
-      purchaseMarketOrderItem(steamid: String!, assetid: String!) : String
+      addMarketOrderItems(assetids: [String!]!) : [MarketItem]
+      purchaseMarketOrderItem(assetids: [String!]!) : [String]
+      delistMarketOrderPurchaseMarket(assetid: String!) : Boolean
    }
 `;
 

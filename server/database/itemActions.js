@@ -10,7 +10,6 @@ const updateItem = async function updateItemInItemDb(item) {
     }
     catch(err) {
         console.log(`Failed to update item trying again: ${item}`)
-        updateItem(item);
     }
 }
 

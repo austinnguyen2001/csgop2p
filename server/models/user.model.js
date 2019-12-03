@@ -3,6 +3,13 @@ import Item from './item.model';
 
 const userSchema = new Schema({
     steamid: String,
+    avatar: String,
+    personaname: String,
+    tradeurl: String,
+    isPurchasing: {
+        type: Boolean,
+        default: false
+    },
     balance: {
         type: Number,
         default: 0

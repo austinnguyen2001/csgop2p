@@ -3,15 +3,15 @@ import { findItem } from './itemActions';
 
 const addMarketOrderItem = async function addIteminMarketDb(steamId, item) {
     try {
-        await Market.findOneAndUpdate({ assetid: item.assetid }, {
+        const addedItem = await Market.findOneAndUpdate({ assetid: item.assetid }, {
             owner: steamId,
             assetid: item.assetid,
             item: await findItem({name: item.name})
-        }, {upsert:true});
+        }, {upsert:true, new: true});
+        return addedItem;
     }
     catch(err) {
         console.log(`Failed to add item to market: ${item}`);
-        addMarketOrderItem(steamId, item);
     }
 }
 
@@ -27,14 +27,24 @@ const getMarketOrders = async function getMarketOrders(options = {}) {
 
 const purchaseMarketOrderItem = async function purchaseIteminMarketDb(steamId, assetid) {
     try {
-        await Market.findOneAndUpdate({ assetid: assetid }, {
+        const purchasedMarketOrder = await Market.findOneAndUpdate({ assetid: assetid }, {
             purchaser: steamId,
             startedPurchase: Date.now()
         });
+        return purchasedMarketOrder;
     }
     catch(err) {
         console.log(`Failed to buy item from market: ${assetid}`);
-        addMarketOrderItem(steamId, assetid);
+    }
+}
+
+const delistMarketOrder = async function deleteMarketOrderinMarketDb(assetid) {
+    try {
+        const delistedItem = await Market.findOneAndDelete({ assetid: assetid }).exec();
+        return delistedItem;
+    }
+    catch(err) {
+        console.log(`Failed to get delete market order: ${assetid}`)
     }
 }
 
@@ -56,13 +66,13 @@ const cancelMarketOrderPurchase = async function purchaseIteminMarketDb(assetid)
     }
     catch(err) {
         console.log(`Failed to cancel buy order from market: ${assetid}`);
-        cancelMarketOrderPurchase(assetid);
     }
 }
 
 export {
     addMarketOrderItem,
     purchaseMarketOrderItem,
+    delistMarketOrder,
     getMarketOrders,
     completeMarketOrderPurchase,
     cancelMarketOrderPurchase

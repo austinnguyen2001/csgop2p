@@ -1,5 +1,5 @@
-import InventoryModule from './steamModules/inventoryModule';
-import InventoryPollModule from './steamModules/inventoryPollModule';
+//import InventoryModule from './steamModules/inventoryModule';
+//import InventoryPollModule from './steamModules/inventoryPollModule';
 import mongoose from 'mongoose';
 import { mongoDbPath, bitskinsApiKey, bitskinsTwoFactor, steamApiKey } from './config';
 import bitskinsPricingModule from './bitskinsModules/bitskinPricingModule';
@@ -11,9 +11,9 @@ import { Strategy as SteamStrategy } from 'passport-steam';
 import session from 'express-session';
 import { initializeUser } from './database/userActions';
 
-const inventoryModule = new InventoryModule();
-const inventoryPollModule = new InventoryPollModule();
-//const bitskinsPricingMod = new bitskinsPricingModule(bitskinsApiKey, bitskinsTwoFactor);
+//const inventoryModule = new InventoryModule();
+//const inventoryPollModule = new InventoryPollModule();
+new bitskinsPricingModule(bitskinsApiKey, bitskinsTwoFactor);
 
 // Connect to our db
 const connect = () => {
@@ -33,11 +33,11 @@ mongoose.connection.on('disconnected', connect);
 
 // Start express
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 app.use(session({
-    secret: 'your secret',
-    name: 'name of session id',
+    secret: 'Whi8jsl0LDD',
+    name: 'oauthid',
     resave: true,
     saveUninitialized: true}));
 
@@ -53,12 +53,12 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new SteamStrategy({
-    returnURL: 'http://localhost:3000/auth/steam/return',
-    realm: 'http://localhost:3000/',
+    returnURL: 'http://localhost:4000/auth/steam/return',
+    realm: 'http://localhost:4000/',
     apiKey: steamApiKey
   },
   function(identifier, profile, done) {
-    initializeUser(profile._json.steamid).then(user => {
+    initializeUser(profile._json).then(user => {
         return done(null, user);
     })
   }
@@ -72,26 +72,22 @@ app.use('/graphql', graphlHTTP((req) => ({
     graphiql: true
 })));
 
-app.get('/', function(req, res){
-    res.json({ user: req.user });
-});
-
 app.get('/auth/steam',
-  passport.authenticate('steam', { failureRedirect: '/' }),
+  passport.authenticate('steam', { failureRedirect: 'http://localhost:3000' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('http://localhost:3000');
 });
 
 app.get('/auth/steam/return',
-  passport.authenticate('steam', { failureRedirect: '/' }),
+  passport.authenticate('steam', { failureRedirect: 'http://localhost:3000' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('http://localhost:3000');
 });
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
     req.logout();
-    res.redirect('/');
+    res.redirect('http://localhost:3000');
 });
 
 app.listen(PORT, () => {

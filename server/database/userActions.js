@@ -1,13 +1,12 @@
 import User from '../models/user.model';
 
-const initializeUser = async function initializeUserInDb(steamId) {
+const initializeUser = async function initializeUserInDb(userInfo) {
     try {
-        const user = await User.findOneAndUpdate({ steamid: steamId }, {}, {upsert:true, new: true});
+        const user = await User.findOneAndUpdate({ steamid: userInfo.steamid }, { avatar: userInfo.avatarmedium, personaname: userInfo.personaname }, {upsert:true, new: true});
         return user;
     }
     catch(err) {
-        console.log(`Failed to update user: ${steamId}`);
-        initializeUser(steamId);
+        console.log(`Failed to initialize user: ${err}`);
     }
 }
 
@@ -17,7 +16,6 @@ const updateUserInventory = async function updateUserInventoryInDb(steamId, item
     }
     catch(err) {
         console.log(`Failed to update user: ${steamId}`);
-        updateUserInventory(steamId, items);
     }
 }
 
@@ -27,7 +25,6 @@ const updateUserBalance = async function updateUserBalanceInDb(steamId, amount) 
     }
     catch(err) {
         console.log(`Failed to update user balance: ${steamId}`);
-        updateUserInventory(steamId, amount);
     }
 }
 

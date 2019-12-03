@@ -3,9 +3,8 @@ import { getMarketOrders, completeMarketOrderPurchase, cancelMarketOrderPurchase
 import { maxTimeToExchangeItems } from '../config';
 
 class inventoryPollModule extends inventoryModule {
-    constructor(pollInterval = 30000) {
+    constructor(pollInterval = 10000) {
         super();
-        this.pollInterval = pollInterval;
         this.doPoll();
         setInterval(() => this.doPoll(), pollInterval);
     }
