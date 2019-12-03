@@ -6,6 +6,10 @@
 
 ## Quick Start
 ```bash
+open main folder
+npm install
+npm run dev
+cd /server
 edit config.js with your info
 npm install
 npm start
