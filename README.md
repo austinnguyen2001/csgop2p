@@ -5,6 +5,7 @@
 - If anyone wants to talk add Kuroi#8580 on discord
 
 ## Quick Start
+Planning to combine later but keeping seperate for now
 ```bash
 open main folder
 npm install
