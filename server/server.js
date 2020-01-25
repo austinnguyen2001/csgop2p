@@ -2,7 +2,7 @@
 //import InventoryPollModule from './steamModules/inventoryPollModule';
 import mongoose from 'mongoose';
 import { mongoDbPath, bitskinsApiKey, bitskinsTwoFactor, steamApiKey } from './config';
-import bitskinsPricingModule from './bitskinsModules/bitskinPricingModule';
+import bitskinsPricingModule from './bitskinsModules/bitskinsPricingModule';
 import express from 'express';
 import graphlHTTP from 'express-graphql';
 import schema from './graphql/schema';
@@ -10,10 +10,11 @@ import passport from 'passport';
 import { Strategy as SteamStrategy } from 'passport-steam';
 import session from 'express-session';
 import { initializeUser } from './database/userActions';
-
+import bitskinsWebAutomationModule from './bitskinsModules/bitskinsWebAutomationModule';
 //const inventoryModule = new InventoryModule();
 //const inventoryPollModule = new InventoryPollModule();
-new bitskinsPricingModule(bitskinsApiKey, bitskinsTwoFactor);
+// new bitskinsPricingModule(bitskinsApiKey, bitskinsTwoFactor);
+new bitskinsWebAutomationModule();
 
 // Connect to our db
 const connect = () => {

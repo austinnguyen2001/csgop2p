@@ -30,13 +30,16 @@ const typeDefs = `
 
    type Query {
       getUser: User
-      allMarketOrders: [MarketItem]
+      getMarketOrders(options: String): [MarketItem]
+      requestCustomMarketOrder(itemId: String!) : Float
    }
    
    type Mutation {
+      setTradeUrl(tradeUrl: String!) : Boolean
       addMarketOrderItems(assetids: [String!]!) : [MarketItem]
       purchaseMarketOrderItem(assetids: [String!]!) : [String]
       delistMarketOrderPurchaseMarket(assetid: String!) : Boolean
+      buyCustomMarketOrder(itemId: String!, price: Float!) : Boolean
    }
 `;
 

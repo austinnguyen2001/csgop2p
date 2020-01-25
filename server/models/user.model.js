@@ -5,7 +5,7 @@ const userSchema = new Schema({
     steamid: String,
     avatar: String,
     personaname: String,
-    tradeurl: String,
+    tradeUrl: String,
     isPurchasing: {
         type: Boolean,
         default: false
