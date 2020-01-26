@@ -20,120 +20,63 @@
         </option>
       </select>
     </div>
-    <div class="withdraw">
-      <div v-if="filteredOrderedAssets.length > 0" class="item-grid">
-        <div
-          v-for="asset in filteredOrderedAssets"
-          :key="asset.assetid"
-          class="item"
-          @click="toggleSelected(asset)"
-        >
-          <div
-            :class="{
-              selected: selectedAssets.includes(asset)
-            }"
-          />
-          <div class="item__inner">
-            <div class="item__inner__image">
-              <img :src="asset.item.icon_url" />
-            </div>
-            <div class="item__inner__info">
-              {{ asset.item.name }}
-              <span class="item__inner__info--price">
-                <img src="~/assets/coins.svg" class="coins" alt="coins" />
-                {{ asset.item.price }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        v-else-if="filteredOrderedAssets"
-        style="height: 100%; background: #1f1f1f;"
-      >
-        Loading...
+    <main class="withdraw">
+      <Inventory
+        v-if="load && assets"
+        class="item-grid"
+        :items="assets"
+        :selecteditems="selectedItems"
+        :sort-order="sortOrder.options.indexOf(sortOrder.selectedOption)"
+        @updated-selected-items="updateSelectedItems($event)"
+      />
+      <div v-else-if="load && !assets">
+        Your inventory is empty
       </div>
       <div v-else>
-        Failed to load inventory please refresh.
+        Loading inventory...
       </div>
-      <div class="selected-item-grid">
-        <div
-          v-for="asset in selectedAssets"
-          :key="asset.assetid"
-          class="selected-item"
-          @click="toggleSelected(asset)"
-        >
-          <img :src="asset.item.icon_url" style="width:100px" />
-          {{ asset.item.name }}
-        </div>
-      </div>
-    </div>
+      <InventorySidebar
+        class="selected-item-grid"
+        :selecteditems="selectedItems"
+      />
+    </main>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import Inventory from '~/components/Inventory'
+import InventorySidebar from '~/components/InventorySideBar'
 
 export default {
-  data() {
-    return {
-      search: '',
-      assets: [],
-      selectedAssets: [],
-      selectedOwner: null,
-      sortOrder: {
-        options: ['Highest to lowest', 'Lowest to highest'],
-        selectedOption: 'Highest to lowest'
-      }
-    }
+  components: {
+    Inventory,
+    InventorySidebar
   },
-  computed: {
-    filteredOrderedAssets() {
-      const regex = new RegExp('(' + this.search + ')', 'i')
-      const order =
-        this.sortOrder.options.indexOf(this.sortOrder.selectedOption) === 0
-          ? 1
-          : -1
-      const ownerFilteredAssets = this.selectedOwner
-        ? this.assets.filter((asset) => asset.owner === this.selectedOwner)
-        : this.assets
-      return ownerFilteredAssets
-        .filter((asset) => {
-          return asset.item.name.match(regex)
-        })
-        .sort((a, b) => {
-          if (a.item.price < b.item.price) {
-            return 1 * order
-          }
-          if (a.item.price > b.item.price) {
-            return -1 * order
-          }
-          return 0
-        })
+  data: () => ({
+    load: false,
+    search: '',
+    assets: [],
+    selectedItems: [],
+    sortOrder: {
+      options: ['Highest to lowest', 'Lowest to highest'],
+      selectedOption: 'Highest to lowest'
     }
-  },
+  }),
   mounted() {
     axios
-      .get('/graphql', {
-        params: {
-          query:
-            '{allMarketOrders{owner,assetid,item{name,icon_url,quality_color,price}}}'
-        }
+      .get(
+        '/graphql?query={getMarketOrders{owner,assetid,item{name,icon_url,quality_color,price}}}'
+      )
+      .then((res) => {
+        this.assets = res.data.data.getMarketOrders
+        this.load = true
       })
-      .then((res) => (this.assets = res.data.data.allMarketOrders))
-      .catch((e) => (this.assets = null))
   },
   methods: {
-    toggleSelected(asset) {
-      if (this.selectedAssets.includes(asset)) {
-        this.selectedAssets = this.selectedAssets.filter(
-          (item) => item !== asset
-        )
-        if (this.selectedAssets.length === 0) this.selectedOwner = null
-      } else {
-        this.selectedAssets.push(asset)
-        this.selectedOwner = asset.owner
-      }
+    updateSelectedItems(event) {
+      // need to create a new Set or it doesn't update kinda ruins the use of the set tho
+      this.selectedItems = [...event]
     }
   }
 }

@@ -14,7 +14,7 @@ import bitskinsWebAutomationModule from './bitskinsModules/bitskinsWebAutomation
 //const inventoryModule = new InventoryModule();
 //const inventoryPollModule = new InventoryPollModule();
 // new bitskinsPricingModule(bitskinsApiKey, bitskinsTwoFactor);
-new bitskinsWebAutomationModule();
+// new bitskinsWebAutomationModule();
 
 // Connect to our db
 const connect = () => {

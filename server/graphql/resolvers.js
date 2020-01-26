@@ -84,13 +84,14 @@ export const resolvers = {
             return false;
         },
         async buyCustomMarketOrder(root, {itemId, price}, context) {
-            // User will send back the confirmed price from the requestCustomMarketOrder
+            /**
+             * User will send back the confirmed price from the requestCustomMarketOrder
+             * No need to perform a price check they are paying the amount and if the item is already sold then the api will tell us so
+             */
             const balance = (await getUser(context.user.steamid)).balance;
             if (price > balance) return;
 
-            const bitskinsPurchase = (await bitskinsMarketModule.buyBitskinsItem(itemId, price, context.user.tradeUrl));
-            
-            return bitskinsPurchase ? true : false;
+            return (await bitskinsMarketModule.buyBitskinsItem(itemId, price, context.user.tradeUrl));
         }
     }
 };

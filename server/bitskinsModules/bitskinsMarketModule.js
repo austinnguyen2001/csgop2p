@@ -20,7 +20,7 @@ class bitskinsMarketModule extends bitskinsModule {
         this.queue = [];
     }
     async buyBitskinsItem(itemId, price, tradeUrl) {
-        await this.processBuyRequest(itemId, price, tradeUrl);
+        return await this.processBuyRequest(itemId, price, tradeUrl);
     }
     async processBuyRequest(itemId, price, tradeUrl) {
         // If the item isn't in the queue, then add it (no dups)
