@@ -1,33 +1,10 @@
 <template>
   <div>
-    <div class="flex flex-wrap justify-between">
-      <div class="input">
-        <img
-          src="~/assets/search.svg"
-          draggable="false"
-          class="search"
-          alt="Search"
-        />
-        <input v-model="search" type="text" placeholder="Search" />
-      </div>
-      <select v-model="sortOrder.selectedOption">
-        <option
-          v-for="option in sortOrder.options"
-          :key="option"
-          :value="option"
-        >
-          {{ option }}
-        </option>
-      </select>
-    </div>
     <main class="withdraw">
       <Inventory
         v-if="load && assets"
-        class="item-grid"
-        :items="assets"
-        :selecteditems="selectedItems"
-        :sort-order="sortOrder.options.indexOf(sortOrder.selectedOption)"
-        @updated-selected-items="updateSelectedItems($event)"
+        :assets="assets"
+        @update-assets="assets = $event"
       />
       <div v-else-if="load && !assets">
         Your inventory is empty
@@ -35,10 +12,7 @@
       <div v-else>
         Loading inventory...
       </div>
-      <InventorySidebar
-        class="selected-item-grid"
-        :selecteditems="selectedItems"
-      />
+      <InventorySidebar :assets="assets" @update-assets="assets = $event" />
     </main>
   </div>
 </template>
@@ -46,7 +20,7 @@
 <script>
 import axios from 'axios'
 import Inventory from '~/components/Inventory'
-import InventorySidebar from '~/components/InventorySideBar'
+import InventorySidebar from '~/components/InventorySidebar'
 
 export default {
   components: {
@@ -55,13 +29,7 @@ export default {
   },
   data: () => ({
     load: false,
-    search: '',
-    assets: [],
-    selectedItems: [],
-    sortOrder: {
-      options: ['Highest to lowest', 'Lowest to highest'],
-      selectedOption: 'Highest to lowest'
-    }
+    assets: []
   }),
   mounted() {
     axios
@@ -69,28 +37,17 @@ export default {
         '/graphql?query={getMarketOrders{owner,assetid,item{name,icon_url,quality_color,price}}}'
       )
       .then((res) => {
-        this.assets = res.data.data.getMarketOrders
+        this.assets = res.data.data.getMarketOrders.map((asset) => ({
+          asset,
+          selected: false
+        }))
         this.load = true
       })
-  },
-  methods: {
-    updateSelectedItems(event) {
-      // need to create a new Set or it doesn't update kinda ruins the use of the set tho
-      this.selectedItems = [...event]
-    }
   }
 }
 </script>
 
-<style scoped>
-.item-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  grid-template-rows: repeat(auto-fill, 283px);
-  grid-column-gap: 1.25rem;
-  grid-row-gap: 2.1875rem;
-}
-
+<style>
 .withdraw {
   display: grid;
   grid-template-columns: 1fr 20rem;

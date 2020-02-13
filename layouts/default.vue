@@ -44,6 +44,13 @@ body,
 a {
   text-decoration: none;
 }
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
 ::-webkit-scrollbar {
   width: 3px;
 }

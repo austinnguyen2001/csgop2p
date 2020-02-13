@@ -15,7 +15,7 @@ export default {
   },
   loading: { color: '#fff' },
   css: [],
-  plugins: [],
+  plugins: ['~/plugins/vue-fragment'],
   buildModules: ['@nuxtjs/eslint-module'],
   modules: ['@nuxtjs/axios', '@nuxtjs/pwa'],
   axios: {
