@@ -14,7 +14,7 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^3.0.0-0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.15.8",
     "vue-fragment": "^1.5.1"
   },
   "devDependencies": {
